@@ -65,3 +65,45 @@ for i in part_in:
 		print(f"{i}, thanks")
 	else:
 		print(f"{i}, please com" )
+'''
+
+#6-7 6-8 6-9 6-10 6-11 6-12
+'''
+my = {"firstname": 'z', 'lastname': 'yx', "age": 22, 'city': 'hangzhou'}
+snn =  {"firstname": 's', 'lastname': 'nn', "age": 23, 'city': 'wuhan'}
+nn =  {"firstname": 'z', 'lastname': 'ln', "age": 21, 'city': 'zhengzhou'}
+people = [my, snn, nn]
+for name in people:
+	for key, value in name.items():
+		print(f"{key}: {value}")
+
+dog = {'type': 'keji', 'owner': 'nn'}
+cat = {'type': 'jiafei', 'owner': 'pp'}
+pets = [dog, cat]
+for pet in pets:
+	for key, value in pet.items():
+		print(f"{key}: {value}")
+'''
+
+favority_places = {'nn': ['wuhan', 'hangzhou', 'changsha'], 'zyx': ['changsha', 'zhengzhou'], 'snn': ['wuhan']}
+for key, values in favority_places.items():
+	print(f"{key}'s favority is ")
+	for v in values:
+		print(v)
+
+name_num = {'zyx': [22, 1], 'lmy': [23, 3], 'nn': [3, 4], 'snn': [5, 7], 'xxf': [6, 9]}
+for name, num in name_num.items():
+	print(f"{name}'s favority is ")
+	for n in num:
+		print(n)
+
+cities = {
+'hangzhou': {'country': 'china', 'pop': 23, 'face': 'beautiful'},
+'wuhan': {'country': 'china', 'pop': 1, 'face': 'crowded'},
+'beijing:': {'country': 'china', 'pop': 3, 'face': 'fanhua'}
+}
+
+for c, v in cities.items():
+	print(f"this is {c}")
+	for k, va in v.items():
+		print(f"\t{k}: {va}")
