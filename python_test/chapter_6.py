@@ -46,6 +46,7 @@ print(my)
 '''
 
 #6-4 6-5 6-6
+'''
 pyt = {'list': 1, 'dic': 3, 'int': 4, 'float': 5, 'double': 2}
 for s, v in pyt.items():
 	print(f"{s}: {v}")
