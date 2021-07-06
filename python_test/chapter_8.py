@@ -116,7 +116,7 @@ name_location("zyx", '22', city = 'beijing', country = 'china')
 '''
 
 # 8-12 8-13 8-14
-
+'''
 def order(*fruit):
 	print(f"you want {fruit} ")
 
@@ -136,5 +136,6 @@ def car(make, version, **info):
 
 cars = car('subaru', 'outback', color = 'blue', tow_package = 'True')
 print(cars)
+'''
 
 
