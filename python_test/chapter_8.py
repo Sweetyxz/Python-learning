@@ -82,6 +82,7 @@ while True:
 '''
 
 # 8-9 8-10 8-11
+'''
 mes = ["hi", "hello", "hh"]
 sent_messages = []
 def show_message(mes):
@@ -93,6 +94,47 @@ def send_messages(mes):
 		x = mes.pop()
 		sent_messages.append(x)
 
-send_messages(mes[:])
+#sent_messages(mes) 原列表
+send_messages(mes[:]) #副本
 print(mes)
 show_message(sent_messages)
+'''
+
+'''
+def names(have_couple, *name): #传递任意数量的形参
+	print(f"do they have couple? {have_couple}")
+	for n in name:
+		print(n)
+names('yes', 'zyx', 'lmy', 'snn')
+names('no', 'bo')
+
+def name_location(name, age, **info): # 字典形参
+	info['name'] = name
+	info['age'] = age
+	print(info)
+name_location("zyx", '22', city = 'beijing', country = 'china')
+'''
+
+# 8-12 8-13 8-14
+
+def order(*fruit):
+	print(f"you want {fruit} ")
+
+order("banana")
+order("apple", "orange", "milk")
+
+def name_location(name, age, **info): # 字典形参
+	info['name'] = name
+	info['age'] = age
+	print(info)
+name_location("zyx", '22', city = 'beijing', country = 'china')
+
+def car(make, version, **info):
+	info['make'] = make
+	info['version'] = version
+	return info
+
+cars = car('subaru', 'outback', color = 'blue', tow_package = 'True')
+print(cars)
+
+
