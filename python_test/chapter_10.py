@@ -1,3 +1,4 @@
+import json
 '''
 with open('pi_digits.txt') as file_object:
     #contents = file_object.read() 
@@ -66,4 +67,41 @@ while True:
             print(num)
 '''
 
+# 10-11 10-12 10-13
+'''
+filename = 'num.jaon'
+num = input("please enter your favorite num:")
+with open(filename, 'w') as f:
+    json.dump(num, f)
+with open(filename) as f:
+    number = json.load(f)
+    print(f"i know your favorite number is {number}")
+'''
+filename = 'num.json'
 
+
+def is_store_name():
+    try:
+        with open(filename) as f:
+            number = json.load(f)
+    except FileNotFoundError:
+        return None
+    else:
+        return number
+
+
+def no_store_name():
+    num = input("please enter your favorite num:")
+    with open(filename, 'w') as f:
+        json.dump(num, f)
+
+
+def greet_user():
+    user = is_store_name()
+    if user:
+        print(f"hello {user}")
+    else:
+        no_store_name()
+
+
+greet_user()
