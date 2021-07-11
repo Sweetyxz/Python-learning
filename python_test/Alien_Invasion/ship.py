@@ -6,9 +6,23 @@ class Ship:
     def __init__(self, ai_game):
         self.screen = ai_game.screen
         self.screen_rect = ai_game.screen.get_rect()
+        self.settings = ai_game.settings
+
         self.image = pygame.image.load('images/ship.bmp')
         self.rect = self.image.get_rect()  # 变成矩形操作
-        self.rect.midbottom = self.screen_rect.midbottom  # 矩形放在底部中央
+        self.rect.midbottom = self.screen_rect.midbottom  # 矩形底部放在窗口底部中央
+
+        self.move_right = False
+        self.move_left = False
+        self.x = float(self.rect.x)
+
+    def updata(self):
+        if self.move_right and self.rect.right < self.screen_rect.right:
+            self.x += self.settings.ship_speed
+        if self.move_left and self.rect.left > 0:
+            self.x -= self.settings.ship_speed
+
+        self.rect.x = self.x
 
     def biteme(self):
         self.screen.blit(self.image, self.rect)  # 绘制图像
