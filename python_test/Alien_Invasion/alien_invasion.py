@@ -3,6 +3,7 @@ import pygame
 from setting import settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 
 
 class AlienInvasion:
@@ -18,8 +19,10 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
 
         self.ship = Ship(self)  # self指向当前实例
-
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+
+        self.creat_aliens()
 
     def check_keydown_event(self, event):  # 飞船的按下键盘检查
         if event.key == pygame.K_RIGHT:
@@ -46,22 +49,48 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP:
                 self.check_keyup_event(event)
 
-    def fire_bullet(self):
+    def fire_bullet(self):  # 子弹添加到编组中
         if len(self.bullets) < self.settings.bullet_number_allowed:
             bullet = Bullet(self)  # 实例化bullet元素
             self.bullets.add(bullet)  # 添加到编组中
+
+    def creat_aliens(self):  # 创建外星人编组
+        alien = Alien(self)
+        alien_width = alien.rect.width
+        alien_height = alien.rect.height
+        avail_space_x = self.settings.screen_width - alien_width * 2
+        number_alien_x = avail_space_x // (alien_width * 2)
+
+        ship_height = self.ship.rect.height
+        avail_space_y = (self.settings.screen_height - 
+            (alien_height * 3) - ship_height)
+        number_rows = avail_space_y // (2 * alien_height)
+        for row in range(number_rows):
+            for alien_number in range(number_alien_x):
+                self.creat_alienrow(alien_number, row)
+
+    def creat_alienrow(self, alien_number, alien_row):  # 添加指定位置的外星人
+        alien = Alien(self)
+        alien_width = alien.rect.width
+        alien_height = alien.rect.height
+        alien.x = alien_width + alien_width * 2 * alien_number
+        alien.y = alien_height + alien_height * 2 * alien_row
+        alien.rect.x = alien.x
+        alien.rect.y = alien.y
+        self.aliens.add(alien)
 
     def update_screen(self):  # 屏幕更新
         self.screen.fill(self.settings.bg_color)
         self.ship.biteme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        self.aliens.draw(self.screen)  # aliens编组的绘制
         pygame.display.flip()  # 绘制的屏幕可见
 
-    def update_buttle(self):
+    def update_buttle(self):  # 更新子弹
         self.bullets.update()
 
-        for bullet in self.bullets.copy():  # 使用编组的副本
+        for bullet in self.bullets.copy():  # 使用编组的副本,子弹从屏幕消失时，移除子弹
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
