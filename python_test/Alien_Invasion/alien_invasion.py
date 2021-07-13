@@ -61,7 +61,7 @@ class AlienInvasion:
     def update_buttle(self):
         self.bullets.update()
 
-        for bullet in self.bullets.copy():  #使用编组的副本
+        for bullet in self.bullets.copy():  # 使用编组的副本
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
