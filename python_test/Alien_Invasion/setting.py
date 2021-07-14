@@ -12,3 +12,7 @@ class settings:
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_number_allowed = 3
+
+        self.alien_speed = 1.0
+        self.alien_drop_speed = 10
+        self.alien_direction = 1  # 1表示右 -1表示左

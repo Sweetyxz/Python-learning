@@ -79,6 +79,20 @@ class AlienInvasion:
         alien.rect.y = alien.y
         self.aliens.add(alien)
 
+    def update_aliens(self):  # 外星人不断移动
+        self.aliens.update()
+
+    def cheak_edge(self):  # 检测外星人是否到达边缘
+        for alien in self.aliens:
+            if alien.check_edge():
+                self.alien_down()
+                break
+
+    def alien_down(self):  # 外星人到达边缘后下沉 改变方向
+        for alien in self.aliens:
+            alien.rect.y += self.settings.alien_drop_speed
+            self.settings.alien_direction *= -1
+
     def update_screen(self):  # 屏幕更新
         self.screen.fill(self.settings.bg_color)
         self.ship.biteme()
@@ -99,6 +113,8 @@ class AlienInvasion:
             self.check_event()
             self.ship.updata()
             self.update_buttle()
+            self.cheak_edge()
+            self.update_aliens()
             self.update_screen()
 
 
