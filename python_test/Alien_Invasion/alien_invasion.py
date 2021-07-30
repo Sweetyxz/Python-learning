@@ -4,6 +4,8 @@ from setting import settings
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from game_stats import Game_Stats
+from time import sleep
 
 
 class AlienInvasion:
@@ -21,6 +23,7 @@ class AlienInvasion:
         self.ship = Ship(self)  # self指向当前实例
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+        self.stats = Game_Stats(self)
 
         self.creat_aliens()
 
@@ -79,10 +82,6 @@ class AlienInvasion:
         alien.rect.y = alien.y
         self.aliens.add(alien)
 
-    def update_aliens(self):  # 外星人不断移动
-        self.cheak_edge()
-        self.aliens.update()
-
     def cheak_edge(self):  # 检测外星人是否到达边缘
         for alien in self.aliens.sprites():
             if alien.check_edge():
@@ -93,6 +92,32 @@ class AlienInvasion:
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.alien_drop_speed
         self.settings.alien_direction *= -1
+
+    def ship_hit(self):   # 外星人撞到飞船后进行的操作
+        if self.stats.ships_left > 0:
+            self.stats.ships_left -= 1
+            self.aliens.empty()
+            self.bullets.empty()
+            self.creat_aliens()
+            self.ship.center_ship()
+
+            sleep(0.5)
+        else:
+            self.stats.game_active = False
+
+    def check_alien_bottom(self):  # 检查外星人是否到达底部
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                self.ship_hit()
+
+    def update_aliens(self):  # 外星人不断移动
+        self.cheak_edge()
+        self.aliens.update()
+
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            self.ship_hit()
+        self.check_alien_bottom()
 
     def update_screen(self):  # 屏幕更新
         self.screen.fill(self.settings.bg_color)
@@ -120,9 +145,10 @@ class AlienInvasion:
     def run_game(self):  # 循环判断事件更新屏幕
         while True:
             self.check_event()
-            self.ship.updata()
-            self.update_buttle()
-            self.update_aliens()
+            if self.stats.game_active:
+                self.ship.updata()
+                self.update_buttle()
+                self.update_aliens()
             self.update_screen()
 
 
