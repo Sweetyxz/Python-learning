@@ -5,6 +5,7 @@ from ship import Ship
 from bullet import Bullet
 from alien import Alien
 from game_stats import Game_Stats
+from button import Button
 from time import sleep
 
 
@@ -24,6 +25,7 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self.stats = Game_Stats(self)
+        self.play_button = Button(self, 'Play')
 
         self.creat_aliens()
 
@@ -36,12 +38,20 @@ class AlienInvasion:
             self.fire_bullet()
         elif event.key == pygame.K_q:
             sys.exit()
+        elif event.key == pygame.K_p:
+            self._start_game()
 
     def check_keyup_event(self, event):  # 飞船的松开键盘检查
         if event.key == pygame.K_RIGHT:
             self.ship.move_right = False
         elif event.key == pygame.K_LEFT:
             self.ship.move_left = False
+
+    def check_play_button(self, mouse_pos):
+        if self.play_button.rect.collidepoint(mouse_pos) and not self.stats.game_active:
+            self.stats.game_active = True
+            self._start_game()
+            pygame.mouse.set_visible(False)
 
     def check_event(self):  # 事件判断
         for event in pygame.event.get():
@@ -51,6 +61,16 @@ class AlienInvasion:
                 self.check_keydown_event(event)
             elif event.type == pygame.KEYUP:
                 self.check_keyup_event(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self.check_play_button(mouse_pos)
+
+    def _start_game(self):
+        self.stats.reset_stats()
+        self.aliens.empty()
+        self.bullets.empty()
+        self.creat_aliens()
+        self.ship.center_ship()
 
     def fire_bullet(self):  # 子弹添加到编组中
         if len(self.bullets) < self.settings.bullet_number_allowed:
@@ -65,7 +85,7 @@ class AlienInvasion:
         number_alien_x = avail_space_x // (alien_width * 2)
 
         ship_height = self.ship.rect.height
-        avail_space_y = (self.settings.screen_height - 
+        avail_space_y = (self.settings.screen_height -
             (alien_height * 3) - ship_height)
         number_rows = avail_space_y // (2 * alien_height)
         for row in range(number_rows):
@@ -104,6 +124,7 @@ class AlienInvasion:
             sleep(0.5)
         else:
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
 
     def check_alien_bottom(self):  # 检查外星人是否到达底部
         screen_rect = self.screen.get_rect()
@@ -126,6 +147,10 @@ class AlienInvasion:
             bullet.draw_bullet()
 
         self.aliens.draw(self.screen)  # aliens编组的绘制
+
+        if not self.stats.game_active:
+            self.play_button.draw_button()
+
         pygame.display.flip()  # 绘制的屏幕可见
 
     def update_buttle(self):  # 更新子弹

@@ -1,7 +1,7 @@
 class Game_Stats:
     def __init__(self, aigame):
         self.settings = aigame.settings
-        self.game_active = True
+        self.game_active = False
         self.reset_stats()
 
     def reset_stats(self):
