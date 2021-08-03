@@ -49,6 +49,7 @@ class AlienInvasion:
 
     def check_play_button(self, mouse_pos):
         if self.play_button.rect.collidepoint(mouse_pos) and not self.stats.game_active:
+            self.settings.init_dynamic_settings()
             self.stats.game_active = True
             self._start_game()
             pygame.mouse.set_visible(False)
@@ -166,6 +167,7 @@ class AlienInvasion:
         if not self.aliens:
             self.bullets.empty()  # 删除子弹中的余下sprite
             self.creat_aliens()
+            self.settings.increase_speed()
 
     def run_game(self):  # 循环判断事件更新屏幕
         while True:
