@@ -7,6 +7,7 @@ from alien import Alien
 from game_stats import Game_Stats
 from button import Button
 from time import sleep
+from scoreboard import Scoreboard
 
 
 class AlienInvasion:
@@ -26,6 +27,9 @@ class AlienInvasion:
         self.aliens = pygame.sprite.Group()
         self.stats = Game_Stats(self)
         self.play_button = Button(self, 'Play')
+        self.high_level = Button(self, 'High')
+        self.low_level = Button(self, 'Low')
+        self.sb = Scoreboard(self)
 
         self.creat_aliens()
 
@@ -49,10 +53,19 @@ class AlienInvasion:
 
     def check_play_button(self, mouse_pos):
         if self.play_button.rect.collidepoint(mouse_pos) and not self.stats.game_active:
-            self.settings.init_dynamic_settings()
             self.stats.game_active = True
             self._start_game()
             pygame.mouse.set_visible(False)
+
+    def check_highlevel_button(self, mouse_pos):
+        if self.high_level.rect.collidepoint(mouse_pos) and not self.stats.game_active:
+            self.settings.high_level_speed()
+            self.stats.level_button_state = False
+
+    def check_lowlevel_button(self, mouse_pos):
+        if self.low_level.rect.collidepoint(mouse_pos) and not self.stats.game_active:
+            self.settings.init_dynamic_settings()
+            self.stats.level_button_state = False
 
     def check_event(self):  # 事件判断
         for event in pygame.event.get():
@@ -65,6 +78,8 @@ class AlienInvasion:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 self.check_play_button(mouse_pos)
+                self.check_highlevel_button(mouse_pos)
+                self.check_lowlevel_button(mouse_pos)
 
     def _start_game(self):
         self.stats.reset_stats()
@@ -125,6 +140,7 @@ class AlienInvasion:
             sleep(0.5)
         else:
             self.stats.game_active = False
+            self.stats.level_button_state = True
             pygame.mouse.set_visible(True)
 
     def check_alien_bottom(self):  # 检查外星人是否到达底部
@@ -148,9 +164,16 @@ class AlienInvasion:
             bullet.draw_bullet()
 
         self.aliens.draw(self.screen)  # aliens编组的绘制
+        self.sb.show_score()
 
-        if not self.stats.game_active:
+        if not self.stats.game_active and not self.stats.level_button_state:
             self.play_button.draw_button()
+
+        if self.stats.level_button_state:
+            self.high_level.change_position(self.settings.screen_width/2 - self.high_level.width, self.settings.screen_height/2)
+            self.low_level.change_position(self.settings.screen_width/2 + 20, self.settings.screen_height/2)
+            self.high_level.draw_button()
+            self.low_level.draw_button()
 
         pygame.display.flip()  # 绘制的屏幕可见
 
