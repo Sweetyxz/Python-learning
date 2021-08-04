@@ -52,9 +52,10 @@ class AlienInvasion:
             self.ship.move_left = False
 
     def check_play_button(self, mouse_pos):
-        if self.play_button.rect.collidepoint(mouse_pos) and not self.stats.game_active:
+        if self.play_button.rect.collidepoint(mouse_pos) and not self.stats.game_active and not self.stats.level_button_state:
             self.stats.game_active = True
             self._start_game()
+            self.sb.prep_score()
             pygame.mouse.set_visible(False)
 
     def check_highlevel_button(self, mouse_pos):
@@ -148,6 +149,7 @@ class AlienInvasion:
         for alien in self.aliens.sprites():
             if alien.rect.bottom >= screen_rect.bottom:
                 self.ship_hit()
+                break
 
     def update_aliens(self):  # 外星人不断移动
         self.cheak_edge()
@@ -186,6 +188,11 @@ class AlienInvasion:
 
         collisions = pygame.sprite.groupcollide(  # 检测碰撞
             self.bullets, self.aliens, True, True)
+
+        if collisions:  # 碰撞后分数增加
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alien_point * len(aliens)
+            self.sb.prep_score()
 
         if not self.aliens:
             self.bullets.empty()  # 删除子弹中的余下sprite
