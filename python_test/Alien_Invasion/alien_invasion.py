@@ -143,6 +143,8 @@ class AlienInvasion:
 
             sleep(0.5)
         else:
+            with open('high_score.txt', 'w') as f:
+                f.write(str(self.stats.high_score))
             self.stats.game_active = False
             self.stats.level_button_state = True
             pygame.mouse.set_visible(True)
