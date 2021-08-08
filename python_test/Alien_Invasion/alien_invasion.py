@@ -56,6 +56,8 @@ class AlienInvasion:
             self.stats.game_active = True
             self._start_game()
             self.sb.prep_score()
+            self.sb.prep_level()
+            self.sb.prep_ships()
             pygame.mouse.set_visible(False)
 
     def check_highlevel_button(self, mouse_pos):
@@ -133,6 +135,7 @@ class AlienInvasion:
     def ship_hit(self):   # 外星人撞到飞船后进行的操作
         if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
             self.aliens.empty()
             self.bullets.empty()
             self.creat_aliens()
@@ -193,11 +196,15 @@ class AlienInvasion:
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_point * len(aliens)
             self.sb.prep_score()
+            self.sb.check_high_score()
 
         if not self.aliens:
             self.bullets.empty()  # 删除子弹中的余下sprite
             self.creat_aliens()
             self.settings.increase_speed()
+
+            self.stats.level += 1
+            self.sb.prep_level()
 
     def run_game(self):  # 循环判断事件更新屏幕
         while True:
